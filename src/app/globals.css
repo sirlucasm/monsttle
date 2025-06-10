@@ -1,26 +1,99 @@
 @import "tailwindcss";
+@plugin './hero.ts';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-primary-50: hsl(0, 100%, 95%);
+  --color-primary-100: hsl(0, 90%, 85%);
+  --color-primary-200: hsl(0, 85%, 75%);
+  --color-primary-300: hsl(0, 80%, 65%);
+  --color-primary-400: hsl(0, 75%, 55%);
+  --color-primary-500: hsl(0, 70%, 50%);
+  --color-primary-600: hsl(0, 65%, 45%);
+  --color-primary-700: hsl(0, 60%, 40%);
+  --color-primary-800: hsl(0, 55%, 35%);
+  --color-primary-900: hsl(0, 50%, 30%);
+  --color-primary-foreground: hsl(0, 100%, 99%);
+  --color-primary-default: hsl(0, 80%, 50%);
+  --color-primary: hsl(0, 80%, 50%);
+
+  --color-secondary-50: hsl(30, 100%, 95%);
+  --color-secondary-100: hsl(30, 95%, 85%);
+  --color-secondary-200: hsl(30, 90%, 75%);
+  --color-secondary-300: hsl(30, 85%, 65%);
+  --color-secondary-400: hsl(30, 80%, 55%);
+  --color-secondary-500: hsl(30, 75%, 50%);
+  --color-secondary-600: hsl(30, 70%, 45%);
+  --color-secondary-700: hsl(30, 65%, 40%);
+  --color-secondary-800: hsl(30, 60%, 35%);
+  --color-secondary-900: hsl(30, 55%, 30%);
+  --color-secondary-foreground: hsl(0, 0%, 100%);
+  --color-secondary-default: hsl(30, 100%, 50%);
+  --color-secondary: hsl(30, 100%, 50%);
+
+  --color-neutral-50: hsl(0, 0%, 76%);
+  --color-neutral-100: hsl(0, 0%, 67%);
+  --color-neutral-200: hsl(0, 0%, 63%);
+  --color-neutral-300: hsl(0, 0%, 51%);
+  --color-neutral-400: hsl(0, 0%, 43%);
+  --color-neutral-500: hsl(0, 0%, 35%);
+  --color-neutral-600: hsl(0, 0%, 26%);
+  --color-neutral-700: hsl(0, 0%, 18%);
+  --color-neutral-800: hsl(0, 0%, 10%);
+  --color-neutral-900: hsl(60, 100%, 1%);
+  --color-neutral-foreground: hsl(60, 50%, 97%);
+  --color-neutral-default: hsl(60, 100%, 1%);
+  --color-neutral: hsl(60, 100%, 1%);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  html {
+    color: theme(--color-neutral-foreground);
+    background: theme(--color-neutral-800);
+    background: linear-gradient(
+        240deg,
+        theme(--color-neutral-700) 0%,
+        theme(--color-neutral-800) 50%
+      )
+      no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
   }
-}
+  * {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+  }
+  *::selection {
+    background: #596391;
+  }
+  *,
+  ::after,
+  ::before {
+    box-sizing: border-box;
+  }
+  a {
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+  button {
+    outline: none;
+    cursor: pointer;
+  }
+  button:focus {
+    outline: none;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  .user-drag-none {
+    -webkit-user-drag: none;
+  }
 }

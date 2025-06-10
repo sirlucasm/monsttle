@@ -1,0 +1,30 @@
+import { theme } from "../styles/theme";
+import { heroui } from "@heroui/react";
+
+export default heroui({
+  themes: {
+    dark: {
+      colors: {
+        primary: theme.colors.primary,
+        background: {
+          DEFAULT: theme.colors.neutral[800],
+        },
+        foreground: {
+          DEFAULT: theme.colors.neutral.foreground,
+        },
+        focus: theme.colors.primary,
+      },
+    },
+    light: {
+      colors: {
+        primary: theme.colors.primary,
+        background: {
+          DEFAULT: theme.colors.neutral.foreground,
+        },
+        foreground: {
+          DEFAULT: theme.colors.neutral[800],
+        },
+      },
+    },
+  },
+});
