@@ -48,19 +48,23 @@
   --color-neutral: hsl(60, 100%, 1%);
 }
 
-@layer utilities {
+@layer base {
   html {
+    @apply bg-background text-foreground;
     color: theme(--color-neutral-foreground);
     background: theme(--color-neutral-800);
     background: linear-gradient(
         240deg,
         theme(--color-neutral-700) 0%,
-        theme(--color-neutral-800) 50%
+        theme(--color-neutral-800) 60%
       )
       no-repeat;
     background-attachment: fixed;
     background-size: 100% 100%;
   }
+}
+
+@layer utilities {
   * {
     margin: 0;
     padding: 0;

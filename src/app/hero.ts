@@ -7,12 +7,15 @@ export default heroui({
       colors: {
         primary: theme.colors.primary,
         background: {
-          DEFAULT: theme.colors.neutral[800],
+          DEFAULT: theme.colors.neutral[900],
         },
         foreground: {
           DEFAULT: theme.colors.neutral.foreground,
         },
         focus: theme.colors.primary,
+        default: {
+          DEFAULT: theme.colors.neutral[900],
+        },
       },
     },
     light: {
@@ -22,7 +25,7 @@ export default heroui({
           DEFAULT: theme.colors.neutral.foreground,
         },
         foreground: {
-          DEFAULT: theme.colors.neutral[800],
+          DEFAULT: theme.colors.neutral[900],
         },
       },
     },
