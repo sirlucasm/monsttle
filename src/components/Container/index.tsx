@@ -1,5 +1,15 @@
-export const Container = ({ children }: { children: React.ReactNode }) => {
+import clsx from "clsx";
+
+export const Container = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
   return (
-    <div className="relative z-10 w-full max-w-md mx-auto">{children}</div>
+    <div className={clsx("relative z-10 w-full max-w-md mx-auto", className)}>
+      {children}
+    </div>
   );
 };

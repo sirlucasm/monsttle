@@ -9,12 +9,13 @@ import { useGame } from "@/contexts/game";
 
 export default function Home() {
   const { gameStats } = useGame();
+
   return (
     <Wrapper>
       <Container>
         <Card>
           <div className="text-center flex flex-col gap-y-2">
-            <Logo />
+            <Logo size="lg" />
             <p className="text-white/80 text-sm">
               Create and battle your monsters
             </p>

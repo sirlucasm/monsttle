@@ -17,43 +17,99 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     battlesWon: 0,
     experience: 0,
     level: 1,
+    currentBattle: undefined,
   });
 
-  const addMonster = useCallback(
-    (monster: CreateMonsterDto) => {
-      setMonsters((prevMonsters) => [
-        ...prevMonsters,
-        {
-          ...monster,
-          id: crypto.randomUUID(),
-        },
-      ]);
-      setGameStats((prevStats) => ({
-        ...prevStats,
-        monstersCreated: prevStats.monstersCreated + 1,
-      }));
+  const addMonster = useCallback((monster: CreateMonsterDto) => {
+    const storedMonsters = JSON.parse(
+      localStorage.getItem("monsters") ?? "[]"
+    ) as Monster[];
+    const storedGameStats = JSON.parse(
+      localStorage.getItem("gameStats") ?? "{}"
+    ) as GameStats;
 
-      localStorage.setItem("monsters", JSON.stringify(monsters));
-      localStorage.setItem("gameStats", JSON.stringify(gameStats));
-    },
-    [monsters, gameStats]
-  );
+    const createdMonster = {
+      ...monster,
+      id: crypto.randomUUID(),
+      attack: Number(monster.attack),
+      defense: Number(monster.defense),
+      speed: Number(monster.speed),
+      hp: Number(monster.hp),
+    };
+
+    setMonsters((prevMonsters) => [...prevMonsters, createdMonster]);
+
+    setGameStats((prevStats) => ({
+      ...prevStats,
+      monstersCreated: prevStats.monstersCreated + 1,
+    }));
+
+    localStorage.setItem(
+      "monsters",
+      JSON.stringify([...storedMonsters, createdMonster])
+    );
+    localStorage.setItem(
+      "gameStats",
+      JSON.stringify({
+        ...storedGameStats,
+        monstersCreated: storedGameStats.monstersCreated + 1,
+      })
+    );
+  }, []);
+
+  const startBattle = useCallback((selectedMonsters: Monster[]) => {
+    const storedGameStats = JSON.parse(
+      localStorage.getItem("gameStats") ?? "{}"
+    ) as GameStats;
+
+    setGameStats((prevStats) => ({
+      ...prevStats,
+      currentBattle: {
+        logs: [],
+        fightingMonsters: selectedMonsters,
+      },
+    }));
+
+    localStorage.setItem(
+      "gameStats",
+      JSON.stringify({
+        ...storedGameStats,
+        currentBattle: {
+          logs: [],
+          fightingMonsters: selectedMonsters,
+        },
+      })
+    );
+  }, []);
+
+  const attackMonster = useCallback(() => {}, []);
 
   useEffect(() => {
-    const storedMonsters = localStorage.getItem("monsters");
-    const storedGameStats = localStorage.getItem("gameStats");
+    const storedMonsters = JSON.parse(
+      localStorage.getItem("monsters") ?? "[]"
+    ) as Monster[];
+    const storedGameStats = JSON.parse(
+      localStorage.getItem("gameStats") ?? "{}"
+    ) as GameStats;
 
     if (storedGameStats) {
-      setGameStats(JSON.parse(storedGameStats));
+      setGameStats(storedGameStats);
     }
     if (storedMonsters) {
-      setMonsters(JSON.parse(storedMonsters));
+      setMonsters(storedMonsters);
     }
   }, []);
 
   return (
     <GameContext.Provider
-      value={{ monsters, setMonsters, gameStats, setGameStats, addMonster }}
+      value={{
+        monsters,
+        setMonsters,
+        gameStats,
+        setGameStats,
+        addMonster,
+        startBattle,
+      }}
     >
       {children}
     </GameContext.Provider>
