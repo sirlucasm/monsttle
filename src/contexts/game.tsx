@@ -104,11 +104,12 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
             },
           ],
           fightingMonsters:
-            prevStats.currentBattle?.fightingMonsters.map((monster) =>
-              monster.id === defender.id
-                ? { ...monster, hp: monster.hp - damage }
-                : monster
-            ) ?? [],
+            prevStats.currentBattle?.fightingMonsters.map((monster) => {
+              const newHp = monster.hp - damage;
+              return monster.id === defender.id
+                ? { ...monster, hp: newHp <= 0 ? 0 : newHp }
+                : monster;
+            }) ?? [],
         },
       }));
     },
