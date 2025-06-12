@@ -20,12 +20,12 @@ export const MonsterCard = ({
     <motion.div
       onClick={onClick}
       className={clsx(
-        "flex flex-col gap-y-2 p-2 bg-secondary-100/10 w-48 rounded-xl cursor-pointer hover:bg-secondary-100/20 border-2 border-transparent transition-colors",
+        "flex flex-col gap-y-2 p-2 bg-secondary-100/10 w-[85%] sm:w-48 rounded-xl cursor-pointer hover:bg-secondary-100/20 border-2 border-transparent transition-colors",
         {
           "border-2 !border-secondary-200/20 !bg-secondary-100/20": isSelected,
         }
       )}
-      whileTap={{ scale: 0.99 }}
+      whileTap={{ scale: 0.97 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}

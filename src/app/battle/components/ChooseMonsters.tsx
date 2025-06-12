@@ -24,7 +24,7 @@ export const ChooseMonsters = ({
   );
 
   return (
-    <div className="flex items-center gap-3 flex-wrap relative">
+    <div className="flex items-center justify-center sm:justify-start gap-3 flex-wrap relative">
       {monsters.length === 0 ? (
         <div
           className="flex items-center justify-center w-full"
