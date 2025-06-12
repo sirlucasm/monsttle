@@ -1,9 +1,11 @@
 "use client";
 
+import Button3D from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Container } from "@/components/Container";
 import Logo from "@/components/Logo";
 import { useGame } from "@/contexts/game";
+import { Monster } from "@/schemas/monster";
 import { Progress } from "@heroui/react";
 import { motion } from "framer-motion";
 import { HeartIcon, XIcon } from "lucide-react";
@@ -23,8 +25,9 @@ export const BattleStart = () => {
   const monsterToAttackTurn = useRef(0);
   const [countDown, setCountDown] = useState(3);
   const [isBattleStarted, setIsBattleStarted] = useState(false);
+  const [winnerMonster, setWinnerMonster] = useState<Monster>();
 
-  const { gameStats, attackMonster } = useGame();
+  const { gameStats, attackMonster, endBattle, handleFinishBattle } = useGame();
 
   const fightingMonsters = useMemo(
     () => gameStats?.currentBattle?.fightingMonsters ?? [],
@@ -61,6 +64,8 @@ export const BattleStart = () => {
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
+    if (gameStats?.currentBattle?.winnerMonster) return;
+
     if (isBattleStarted) {
       const sortedMonsters = [...fightingMonsters].sort((m1, m2) =>
         m1.speed !== m2.speed ? m2.speed - m1.speed : m2.attack - m1.attack
@@ -83,12 +88,24 @@ export const BattleStart = () => {
           });
 
           monsterToAttackTurn.current = 1 - monsterToAttackTurn.current;
+        } else {
+          const winner = attacker.hp > 0 ? attacker : defender;
+          endBattle(winner);
+          setIsBattleStarted(false);
+          setWinnerMonster(winner);
+          clearInterval(timer);
         }
       }, 1000);
     }
 
     return () => clearInterval(timer);
-  }, [isBattleStarted, fightingMonsters, attackMonster]);
+  }, [
+    isBattleStarted,
+    fightingMonsters,
+    attackMonster,
+    endBattle,
+    gameStats?.currentBattle?.winnerMonster,
+  ]);
 
   return (
     <Container className="!max-w-[830px]">
@@ -113,13 +130,19 @@ export const BattleStart = () => {
               transition={{ duration: 1 }}
               className="text-white font-bold text-4xl"
             >
-              {countDown > 0
-                ? countDown
-                : countDown === 0 && !isBattleStarted
-                ? "FIGHT!"
-                : countDown < 0 && !isBattleStarted
-                ? "FINISHED!"
-                : ""}
+              {countDown > 0 ? (
+                countDown
+              ) : countDown === 0 && !isBattleStarted ? (
+                "FIGHT!"
+              ) : (
+                <>
+                  Monster{" "}
+                  <span className="text-success font-bold">
+                    {winnerMonster?.name}
+                  </span>{" "}
+                  won! 🎉
+                </>
+              )}
             </motion.p>
           </div>
 
@@ -177,6 +200,13 @@ export const BattleStart = () => {
           </div>
         </div>
       </div>
+
+      {(winnerMonster || gameStats?.currentBattle?.winnerMonster) && (
+        <div className="mt-6">
+          <Button3D onClick={handleFinishBattle}>Finish battle</Button3D>
+        </div>
+      )}
+
       <Card className="mt-6">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <h3 className="text-white/80 font-semibold text-xl">Battle logs</h3>

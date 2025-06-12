@@ -13,6 +13,7 @@ export interface GameStats {
   currentBattle?: {
     logs: BattleLog[];
     fightingMonsters: Monster[];
+    winnerMonster?: Monster;
   };
 }
 
@@ -32,4 +33,6 @@ export interface GameContextType {
     defender: Monster;
     damage: number;
   }) => void;
+  endBattle: (winnerMonster: Monster | undefined) => void;
+  handleFinishBattle: () => void;
 }
