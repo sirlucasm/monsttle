@@ -23,4 +23,13 @@ export interface GameContextType {
   setGameStats: React.Dispatch<React.SetStateAction<GameStats>>;
   addMonster: (monster: CreateMonsterDto) => void;
   startBattle: (selectedMonsters: Monster[]) => void;
+  attackMonster: ({
+    attacker,
+    defender,
+    damage,
+  }: {
+    attacker: Monster;
+    defender: Monster;
+    damage: number;
+  }) => void;
 }

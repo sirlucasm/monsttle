@@ -81,8 +81,41 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       })
     );
   }, []);
-
-  const attackMonster = useCallback(() => {}, []);
+  const attackMonster = useCallback(
+    ({
+      attacker,
+      defender,
+      damage,
+    }: {
+      attacker: Monster;
+      defender: Monster;
+      damage: number;
+    }) => {
+      setGameStats((prevStats) => ({
+        ...prevStats,
+        currentBattle: {
+          logs: [
+            ...(prevStats?.currentBattle?.logs ?? []),
+            {
+              text: `${attacker.name} attacks ${defender.name} for ${damage} damage`,
+              type: "monster",
+              monsterId: attacker.id,
+            },
+          ],
+          fightingMonsters: [
+            ...(prevStats.currentBattle?.fightingMonsters.filter(
+              (monster) => monster.id !== defender.id
+            ) ?? []),
+            {
+              ...defender,
+              hp: defender.hp - damage,
+            },
+          ],
+        },
+      }));
+    },
+    []
+  );
 
   useEffect(() => {
     const storedMonsters = JSON.parse(
@@ -109,6 +142,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         setGameStats,
         addMonster,
         startBattle,
+        attackMonster,
       }}
     >
       {children}

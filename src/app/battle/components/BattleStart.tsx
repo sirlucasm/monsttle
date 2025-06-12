@@ -16,7 +16,7 @@ export const BattleStart = () => {
   const [countDown, setCountDown] = useState(3);
   const [isBattleStarted, setIsBattleStarted] = useState(false);
 
-  const { gameStats } = useGame();
+  const { gameStats, attackMonster } = useGame();
 
   const fightingMonsters = useMemo(
     () => gameStats?.currentBattle?.fightingMonsters ?? [],
@@ -51,10 +51,84 @@ export const BattleStart = () => {
   }, [handleCountDown]);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
     if (isBattleStarted) {
-      setInterval(() => {}, 1000);
+      const monstersDamage = fightingMonsters.map((monster) => {
+        const damage =
+          monster.attack <= monster.defense
+            ? 1
+            : monster.attack - monster.defense;
+        return {
+          monsterId: monster.id,
+          damage,
+        };
+      });
+
+      const firstMonsterToAttack = fightingMonsters.sort((m1, m2) =>
+        m1.speed !== m2.speed ? m2.speed - m1.speed : m2.attack - m1.attack
+      )[0];
+
+      const secondMonsterToAttack = fightingMonsters.find(
+        (monster) => monster.id !== firstMonsterToAttack.id
+      )!;
+
+      timer = setInterval(() => {
+        const firstMonsterDamage = monstersDamage.find(
+          (monster) => monster.monsterId === firstMonsterToAttack.id
+        )!.damage;
+
+        const secondMonsterDamage = monstersDamage.find(
+          (monster) => monster.monsterId === secondMonsterToAttack.id
+        )!.damage;
+
+        // faça um monstro atacar e em seguida outro atacar tambem
+        if (firstMonsterToAttack.hp > 0 && secondMonsterToAttack.hp > 0) {
+          attackMonster({
+            attacker: firstMonsterToAttack,
+            defender: secondMonsterToAttack,
+            damage: firstMonsterDamage,
+          });
+        }
+
+        if (secondMonsterToAttack.hp > 0 && firstMonsterToAttack.hp > 0) {
+          attackMonster({
+            attacker: secondMonsterToAttack,
+            defender: firstMonsterToAttack,
+            damage: secondMonsterDamage,
+          });
+        }
+      }, 1000);
+
+      // let firstMonsterHP = firstMonsterToAttack.hp;
+      // let secondMonsterHP = secondMonsterToAttack.hp;
+
+      // const firstMonsterDamage = monstersDamage.find(
+      //   (m) => m.monsterId === firstMonsterToAttack.id
+      // )!.damage;
+      // const secondMonsterDamage = monstersDamage.find(
+      //   (m) => m.monsterId === secondMonsterToAttack.id
+      // )!.damage;
+
+      // while (firstMonsterHP > 0 && secondMonsterHP > 0) {
+      //   secondMonsterHP -= firstMonsterDamage;
+
+      //   if (secondMonsterHP <= 0) break;
+
+      //   firstMonsterHP -= secondMonsterDamage;
+      // }
+
+      // const winner =
+      //   firstMonsterHP > 0 ? firstMonsterToAttack : secondMonsterToAttack;
+
+      // attackMonster({
+      //   attacker: firstMonsterToAttack,
+      //   defender: secondMonsterToAttack,
+      //   damage: firstMonsterDamage,
+      // });
     }
-  }, [isBattleStarted]);
+
+    return () => clearInterval(timer);
+  }, [isBattleStarted, fightingMonsters, attackMonster]);
 
   return (
     <Container className="!max-w-[830px]">
