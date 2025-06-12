@@ -81,6 +81,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       })
     );
   }, []);
+
   const attackMonster = useCallback(
     ({
       attacker,
@@ -102,15 +103,12 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
               monsterId: attacker.id,
             },
           ],
-          fightingMonsters: [
-            ...(prevStats.currentBattle?.fightingMonsters.filter(
-              (monster) => monster.id !== defender.id
-            ) ?? []),
-            {
-              ...defender,
-              hp: defender.hp - damage,
-            },
-          ],
+          fightingMonsters:
+            prevStats.currentBattle?.fightingMonsters.map((monster) =>
+              monster.id === defender.id
+                ? { ...monster, hp: monster.hp - damage }
+                : monster
+            ) ?? [],
         },
       }));
     },

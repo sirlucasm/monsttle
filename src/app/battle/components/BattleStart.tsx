@@ -8,11 +8,19 @@ import { Progress } from "@heroui/react";
 import { motion } from "framer-motion";
 import { HeartIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 const ImageMotion = motion.create(Image);
 
 export const BattleStart = () => {
+  const monsterToAttackTurn = useRef(0);
   const [countDown, setCountDown] = useState(3);
   const [isBattleStarted, setIsBattleStarted] = useState(false);
 
@@ -52,79 +60,31 @@ export const BattleStart = () => {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
     if (isBattleStarted) {
-      const monstersDamage = fightingMonsters.map((monster) => {
-        const damage =
-          monster.attack <= monster.defense
-            ? 1
-            : monster.attack - monster.defense;
-        return {
-          monsterId: monster.id,
-          damage,
-        };
-      });
-
-      const firstMonsterToAttack = fightingMonsters.sort((m1, m2) =>
+      const sortedMonsters = [...fightingMonsters].sort((m1, m2) =>
         m1.speed !== m2.speed ? m2.speed - m1.speed : m2.attack - m1.attack
-      )[0];
-
-      const secondMonsterToAttack = fightingMonsters.find(
-        (monster) => monster.id !== firstMonsterToAttack.id
-      )!;
+      );
 
       timer = setInterval(() => {
-        const firstMonsterDamage = monstersDamage.find(
-          (monster) => monster.monsterId === firstMonsterToAttack.id
-        )!.damage;
+        const attacker = sortedMonsters[monsterToAttackTurn.current];
+        const defender = sortedMonsters[1 - monsterToAttackTurn.current];
 
-        const secondMonsterDamage = monstersDamage.find(
-          (monster) => monster.monsterId === secondMonsterToAttack.id
-        )!.damage;
+        if (attacker.hp > 0 && defender.hp > 0) {
+          const damage =
+            attacker.attack <= defender.defense
+              ? 1
+              : attacker.attack - defender.defense;
 
-        // faça um monstro atacar e em seguida outro atacar tambem
-        if (firstMonsterToAttack.hp > 0 && secondMonsterToAttack.hp > 0) {
           attackMonster({
-            attacker: firstMonsterToAttack,
-            defender: secondMonsterToAttack,
-            damage: firstMonsterDamage,
+            attacker,
+            defender,
+            damage,
           });
-        }
 
-        if (secondMonsterToAttack.hp > 0 && firstMonsterToAttack.hp > 0) {
-          attackMonster({
-            attacker: secondMonsterToAttack,
-            defender: firstMonsterToAttack,
-            damage: secondMonsterDamage,
-          });
+          monsterToAttackTurn.current = 1 - monsterToAttackTurn.current;
         }
       }, 1000);
-
-      // let firstMonsterHP = firstMonsterToAttack.hp;
-      // let secondMonsterHP = secondMonsterToAttack.hp;
-
-      // const firstMonsterDamage = monstersDamage.find(
-      //   (m) => m.monsterId === firstMonsterToAttack.id
-      // )!.damage;
-      // const secondMonsterDamage = monstersDamage.find(
-      //   (m) => m.monsterId === secondMonsterToAttack.id
-      // )!.damage;
-
-      // while (firstMonsterHP > 0 && secondMonsterHP > 0) {
-      //   secondMonsterHP -= firstMonsterDamage;
-
-      //   if (secondMonsterHP <= 0) break;
-
-      //   firstMonsterHP -= secondMonsterDamage;
-      // }
-
-      // const winner =
-      //   firstMonsterHP > 0 ? firstMonsterToAttack : secondMonsterToAttack;
-
-      // attackMonster({
-      //   attacker: firstMonsterToAttack,
-      //   defender: secondMonsterToAttack,
-      //   damage: firstMonsterDamage,
-      // });
     }
 
     return () => clearInterval(timer);
