@@ -7,7 +7,7 @@ import Logo from "@/components/Logo";
 import { Wrapper } from "@/components/Wrapper";
 import { useGame } from "@/contexts/game";
 import { LEVEL_COLORS } from "@/lib/constants/game";
-import { getLevelInfo } from "@/lib/utils/game";
+import { getLevelInfo, getNextLevelInfo } from "@/lib/utils/game";
 import { Progress } from "@heroui/react";
 import { useMemo } from "react";
 
@@ -16,6 +16,11 @@ export default function Home() {
 
   const levelInfo = useMemo(
     () => getLevelInfo(gameStats.experience),
+    [gameStats.experience]
+  );
+
+  const nextLevelInfo = useMemo(
+    () => getNextLevelInfo(gameStats.experience),
     [gameStats.experience]
   );
 
@@ -75,7 +80,7 @@ export default function Home() {
             </div>
             <Progress
               value={gameStats.experience}
-              maxValue={levelInfo.expNeededPoints}
+              maxValue={nextLevelInfo.expNeededPoints}
             />
           </div>
         </Card>

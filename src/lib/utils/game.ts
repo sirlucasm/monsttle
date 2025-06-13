@@ -20,3 +20,10 @@ export const getLevelInfo = (experience: number) => {
 
   return levelInfo;
 };
+
+export const getNextLevelInfo = (experience: number) => {
+  const nextLevelInfo = LEVELS.sort(
+    (_, lv2) => lv2.expNeededPoints - experience
+  )[0];
+  return nextLevelInfo;
+};
