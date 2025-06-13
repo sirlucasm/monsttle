@@ -25,8 +25,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [monsters, setMonsters] = useState<Monster[]>([]);
   const [gameStats, setGameStats] = useState<GameStats>(INITIAL_GAME_STATS);
 
-  console.log(gameStats);
-
   const addMonster = useCallback((monster: CreateMonsterDto) => {
     const storedMonsters = JSON.parse(
       localStorage.getItem("monsters") ?? "[]"
