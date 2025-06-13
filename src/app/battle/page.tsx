@@ -57,6 +57,8 @@ export default function BattlePage() {
   const handleStartBattle = useCallback(() => {
     if (selectedMonsters.length !== 2) return;
 
+    setSelectedMonsters([]);
+
     startBattle(selectedMonsters);
   }, [selectedMonsters, startBattle]);
 
@@ -141,11 +143,11 @@ export default function BattlePage() {
               key="chooseMonsters"
             >
               {isLoadingPage ? (
-                <div className="flex items-center gap-3 flex-wrap relative">
-                  <Skeleton className="w-48 h-[300px] rounded-xl bg-secondary-700/40" />
-                  <Skeleton className="w-48 h-[300px] rounded-xl bg-secondary-700/40" />
-                  <Skeleton className="w-48 h-[300px] rounded-xl bg-secondary-700/40" />
-                  <Skeleton className="w-48 h-[300px] rounded-xl bg-secondary-700/40" />
+                <div className="flex items-center justify-center sm:justify-start gap-3 flex-wrap relative">
+                  <Skeleton className="w-[85%] sm:w-48 h-[300px] rounded-xl bg-secondary-700/40" />
+                  <Skeleton className="w-[85%] sm:w-48 h-[300px] rounded-xl bg-secondary-700/40" />
+                  <Skeleton className="w-[85%] sm:w-48 h-[300px] rounded-xl bg-secondary-700/40" />
+                  <Skeleton className="w-[85%] sm:w-48 h-[300px] rounded-xl bg-secondary-700/40" />
                 </div>
               ) : (
                 <ChooseMonsters

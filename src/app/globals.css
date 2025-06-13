@@ -100,6 +100,17 @@
   .user-drag-none {
     -webkit-user-drag: none;
   }
+  .level-color-badge::before {
+    content: "";
+    background-color: var(--level-color);
+    position: absolute;
+    z-index: 40;
+    width: 24px;
+    height: 24px;
+    transform: rotate(45deg);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 6px 0 var(--level-color);
+  }
 }
 
 /* Firefox (uncomment to work in Firefox, although other properties will not work!)  */

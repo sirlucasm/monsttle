@@ -9,7 +9,6 @@ export interface GameStats {
   monstersCreated: number;
   battlesWon: number;
   experience: number;
-  level: number;
   currentBattle?: {
     logs: BattleLog[];
     fightingMonsters: Monster[];

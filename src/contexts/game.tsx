@@ -7,7 +7,7 @@ import {
 } from "react";
 import { GameContextType, GameStats } from "./types";
 import { CreateMonsterDto, Monster } from "@/schemas/monster";
-import { calculateBattleExpPoints, calculateLevel } from "@/lib/utils/game";
+import { calculateBattleExpPoints } from "@/lib/utils/game";
 
 export const GameContext = createContext({} as GameContextType);
 
@@ -17,7 +17,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     monstersCreated: 0,
     battlesWon: 0,
     experience: 0,
-    level: 1,
     currentBattle: undefined,
   });
 
@@ -167,9 +166,8 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         prevStats.experience +
         calculateBattleExpPoints({
           atacksCount: prevStats.currentBattle?.logs.length ?? 0,
-          level: prevStats.level,
+          experience: prevStats.experience,
         }),
-      level: calculateLevel(prevStats.experience),
       currentBattle: {
         logs: [
           ...(prevStats?.currentBattle?.logs ?? []),
@@ -196,9 +194,8 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
           storedGameStats.experience +
           calculateBattleExpPoints({
             atacksCount: storedGameStats.currentBattle?.logs.length ?? 0,
-            level: storedGameStats.level,
+            experience: storedGameStats.experience,
           }),
-        level: calculateLevel(storedGameStats.experience),
         currentBattle: {
           logs: [
             ...(storedGameStats?.currentBattle?.logs ?? []),

@@ -6,9 +6,18 @@ import { Container } from "@/components/Container";
 import Logo from "@/components/Logo";
 import { Wrapper } from "@/components/Wrapper";
 import { useGame } from "@/contexts/game";
+import { LEVEL_COLORS } from "@/lib/constants/game";
+import { getLevelInfo } from "@/lib/utils/game";
+import { Progress } from "@heroui/react";
+import { useMemo } from "react";
 
 export default function Home() {
   const { gameStats } = useGame();
+
+  const levelInfo = useMemo(
+    () => getLevelInfo(gameStats.experience),
+    [gameStats.experience]
+  );
 
   return (
     <Wrapper>
@@ -49,6 +58,25 @@ export default function Home() {
               </div>
               <div className="text-xs text-white/60">Experience</div>
             </div>
+          </div>
+
+          <div className="relative mt-4 flex flex-col items-center gap-3 w-40 mx-auto">
+            <div
+              className="flex items-center justify-center rounded-full level-color-badge select-none"
+              style={
+                {
+                  "--level-color": LEVEL_COLORS[levelInfo.level],
+                } as React.CSSProperties
+              }
+            >
+              <p className="text-neutral-800/80 text-lg font-bold z-50">
+                {levelInfo.level}
+              </p>
+            </div>
+            <Progress
+              value={gameStats.experience}
+              maxValue={levelInfo.expNeededPoints}
+            />
           </div>
         </Card>
       </Container>

@@ -124,26 +124,28 @@ export const BattleStart = () => {
         />
         <div className="absolute top-0 left-0 w-full h-full bg-black/50 flex flex-col items-center justify-center">
           <div className="absolute top-5">
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-              className="text-white font-bold text-4xl"
-            >
-              {countDown > 0 ? (
-                countDown
-              ) : countDown === 0 && !isBattleStarted ? (
-                "FIGHT!"
-              ) : (
-                <>
-                  Monster{" "}
-                  <span className="text-success font-bold">
-                    {winnerMonster?.name}
-                  </span>{" "}
-                  won! 🎉
-                </>
-              )}
-            </motion.p>
+            {winnerMonster || gameStats?.currentBattle?.winnerMonster ? (
+              <p className="text-white font-bold text-3xl sm:text-4xl">
+                <span className="text-success font-bold">
+                  {winnerMonster?.name ||
+                    gameStats?.currentBattle?.winnerMonster?.name}
+                </span>{" "}
+                won! 🎉
+              </p>
+            ) : (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="text-white font-bold text-4xl"
+              >
+                {countDown > 0
+                  ? countDown
+                  : countDown === 0 && !isBattleStarted
+                  ? "FIGHT!"
+                  : ""}
+              </motion.p>
+            )}
           </div>
 
           <div className="flex justify-center items-center gap-x-10">
@@ -202,8 +204,10 @@ export const BattleStart = () => {
       </div>
 
       {(winnerMonster || gameStats?.currentBattle?.winnerMonster) && (
-        <div className="mt-6">
-          <Button3D onClick={handleFinishBattle}>Finish battle</Button3D>
+        <div className="mt-6 flex items-center justify-center">
+          <Button3D onClick={handleFinishBattle} size="sm">
+            Finish battle
+          </Button3D>
         </div>
       )}
 

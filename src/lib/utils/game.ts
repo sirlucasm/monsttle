@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { getLevelInfo, LEVELS } from "../constants/game";
+import { LEVELS } from "../constants/game";
 
 export const calculateBattleExpPoints = ({
   atacksCount,
-  level,
+  experience,
 }: {
   atacksCount: number;
-  level: number;
+  experience: number;
 }) => {
-  const levelInfo = getLevelInfo(level);
+  const levelInfo = getLevelInfo(experience);
 
   return Math.floor(levelInfo.expPointsWinBase + atacksCount * Math.random());
 };
 
-export const calculateLevel = (experience: number) => {
+export const getLevelInfo = (experience: number) => {
   const levelInfo = LEVELS.sort(
     (lv1, _) => lv1.expNeededPoints - experience
   )[0];
 
-  return levelInfo.level;
+  return levelInfo;
 };

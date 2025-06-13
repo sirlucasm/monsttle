@@ -76,9 +76,20 @@ export const LEVELS = [
   },
 ];
 
-export const getLevelColor = {
+export const LEVEL_COLORS: Record<number, string> = {
   1: "#E0F7FA",
+  2: "#B2EBF2",
+  3: "#81D4FA",
+  4: "#4FC3F7",
+  5: "#29B6F6",
+  6: "#03A9F4",
+  7: "#039BE5",
+  8: "#0288D1",
+  9: "#0277BD",
+  10: "#01579B",
+  11: "#1E88E5",
+  12: "#3949AB",
+  13: "#5E35B1",
+  14: "#8E24AA",
+  15: "#6A1B9A",
 };
-
-export const getLevelInfo = (level: number) =>
-  LEVELS.find((levelInfo) => levelInfo.level === level) || LEVELS[0];
