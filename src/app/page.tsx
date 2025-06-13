@@ -81,6 +81,7 @@ export default function Home() {
             <Progress
               value={gameStats.experience}
               maxValue={nextLevelInfo.expNeededPoints}
+              aria-label="Experience"
             />
           </div>
         </Card>

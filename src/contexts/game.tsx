@@ -9,16 +9,23 @@ import { GameContextType, GameStats } from "./types";
 import { CreateMonsterDto, Monster } from "@/schemas/monster";
 import { calculateBattleExpPoints } from "@/lib/utils/game";
 
-export const GameContext = createContext({} as GameContextType);
+const INITIAL_GAME_STATS = {
+  monstersCreated: 0,
+  battlesWon: 0,
+  experience: 0,
+  currentBattle: undefined,
+};
+
+export const GameContext = createContext({
+  gameStats: INITIAL_GAME_STATS,
+  monsters: [],
+} as unknown as GameContextType);
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [monsters, setMonsters] = useState<Monster[]>([]);
-  const [gameStats, setGameStats] = useState<GameStats>({
-    monstersCreated: 0,
-    battlesWon: 0,
-    experience: 0,
-    currentBattle: undefined,
-  });
+  const [gameStats, setGameStats] = useState<GameStats>(INITIAL_GAME_STATS);
+
+  console.log(gameStats);
 
   const addMonster = useCallback((monster: CreateMonsterDto) => {
     const storedMonsters = JSON.parse(
@@ -103,7 +110,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       damage: number;
     }) => {
       const storedGameStats = JSON.parse(
-        localStorage.getItem("gameStats") ?? "{}"
+        localStorage.getItem("gameStats") ?? JSON.stringify(INITIAL_GAME_STATS)
       ) as GameStats;
 
       setGameStats((prevStats) => ({
@@ -156,7 +163,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   const endBattle = useCallback((winnerMonster: Monster | undefined) => {
     const storedGameStats = JSON.parse(
-      localStorage.getItem("gameStats") ?? "{}"
+      localStorage.getItem("gameStats") ?? JSON.stringify(INITIAL_GAME_STATS)
     ) as GameStats;
 
     setGameStats((prevStats) => ({
@@ -218,7 +225,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleFinishBattle = useCallback(() => {
     const storedGameStats = JSON.parse(
-      localStorage.getItem("gameStats") ?? "{}"
+      localStorage.getItem("gameStats") ?? JSON.stringify(INITIAL_GAME_STATS)
     ) as GameStats;
 
     setGameStats((prevStats) => ({
@@ -237,10 +244,10 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const storedMonsters = JSON.parse(
-      localStorage.getItem("monsters") ?? "[]"
+      localStorage.getItem("monsters") ?? JSON.stringify([])
     ) as Monster[];
     const storedGameStats = JSON.parse(
-      localStorage.getItem("gameStats") ?? "{}"
+      localStorage.getItem("gameStats") ?? JSON.stringify(INITIAL_GAME_STATS)
     ) as GameStats;
 
     if (storedGameStats) {
